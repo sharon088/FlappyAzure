@@ -1,0 +1,33 @@
+*
+!*/
+.terraform
+
+# but these file type
+!*.py
+!*.md
+!*.html
+!*.sh
+
+# and these files too
+!.gitignore
+!Dockerfile
+!*.dockerignore
+!*.yaml
+!*.yml
+!*.tf
+!*.tfvars
+!*.txt
+
+# and these files too
+!*.yaml
+!*.yml
+!*.tf
+!screenshot.png
+!*.tsx
+!*.js
+!*.ts
+!*.css
+!*.mp3
+!*.png
+!*.ini
+

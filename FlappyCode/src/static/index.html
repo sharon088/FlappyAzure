@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floopy Bird</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .leaderboard-container {
+            width: 300px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .leaderboard-title {
+            text-align: center;
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .leaderboard-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .leaderboard-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .player-name {
+            color: #E0E0E0;
+        }
+
+        .player-score {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .game-container {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .user-info-container {
+            display: flex;               /* Use Flexbox for alignment */
+            margin: 0 0 0 0;                /* Add some spacing around the container */
+            padding: 10px;
+            height: 50px;
+            border-radius: 8px;          /* Optional rounded corners */
+        }
+
+        .user-name {
+            margin-right: 20px; /* Add space between the username and the button */
+            color: white;       /* Keep text white */
+            font-size: 20px;    /* Adjust font size */
+        }
+        canvas { 
+            display: block;
+            background: url('/images/flappybirdbg.png') no-repeat;
+            background-size: cover;
+        }
+
+        #game-over-dialog {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(30, 30, 30, 0.95);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            margin: 10px 0;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 200px;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="leaderboard-container">
+        <h2 class="leaderboard-title">Leaderboard</h2>
+        <ul id="leaderboard" class="leaderboard-list"></ul>
+    </div>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="720" height="1280"></canvas>
+        <div id="game-over-dialog">
+            <h2>Game Over</h2>
+            <p>Your score: <span id="final-score"></span></p>
+            <button onclick="submitScore()">Save Score</button>
+        </div>
+    </div>
+    <div class="user-info-container">
+        <h2 class="user-name">Welcome <span id="display-username"></span></h2>
+
+        <button onclick="logout()">Log Out</button>
+    </div>
+    
+    <script src="/js/game.js"></script>
+</body>
+</html>

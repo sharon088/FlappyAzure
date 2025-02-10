@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flappy-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flappy-app
+  template:
+    metadata:
+      labels:
+        app: flappy-app
+    spec:
+      containers:
+      - name: flappy-app
+        image: flappyacr27.azurecr.io/flask-app:latest
+        ports:
+        - containerPort: 3000
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /login
+            port: 3000
+        livenessProbe:
+          httpGet:
+            path: /login
+            port: 3000
+        env:
+        - name: KEY_VAULT_NAME
+          value: "hdo3keyvault"  # Replace with your actual Key Vault name
+

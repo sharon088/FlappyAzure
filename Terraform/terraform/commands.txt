@@ -1,0 +1,14 @@
+to create resources :
+
+sudo bash ./backend.sh
+
+export ARM_SUBSCRIPTION_ID="your-subscription-id"
+
+terraform init
+
+terraform apply
+
+for deleteion :
+
+az group delete --name terraform-backend-rg --yes
+terraform destroy

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(54, 54, 54, 0.3);
+            font-size: 30px;
+
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .register-message {
+            margin-top: 15px;
+            font-size: 24px;
+            color: #ddd;
+        }
+
+        .register-message a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .register-message a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <input type="text" id="username" placeholder="  Username" />
+        <input type="password" id="password" placeholder=" Password" />
+
+        <button onclick="login()">Login</button>
+        
+
+        <div class="register-message">
+            <p>If you are not registered yet, please <a href="register.html">Register</a>.</p>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;     
+            
+
+            if (!username) {
+                alert("Username is required");
+                return;
+            }
+            localStorage.setItem('username', username);
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+                
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                    window.location.href = '/'; 
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                login(); // Trigger the login function
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+trigger: 
+- main
+- develop
+
+pool:
+  name: Default
+  
+variables:
+  containerRegistry: 'flappybirdacr_service'  
+  repository: 'flappybird'  
+
+stages:
+- stage: CleanStage
+  displayName: 'Clean Workspace Before Build'
+  jobs:
+    - job: CleanJob  
+      displayName: 'Clean Workspace'
+      workspace:
+        clean: all  
+
+# Stage 1: Code Analysis (SonarQube)
+- stage: CodeAnalysis
+  displayName: 'Code Analysis with SonarQube'
+  jobs:
+    - job: SonarQubeAnalysis
+      displayName: 'Run SonarQube Analysis'
+      steps:
+        - checkout: self
+          fetchDepth: 0
+
+        - task: SonarQubePrepare@7
+          condition: eq(variables['Build.SourceBranchName'], 'main')
+          inputs:
+            SonarQube: 'SonarCloud'
+            configMode: 'manual'
+            scannerMode: 'cli'
+            organization: 'sonarcloudkeygen'
+            cliProjectKey: 'sharon088_FlappyBird'
+            projectName: 'FlappyBird'
+
+        - task: SonarQubeAnalyze@7
+          inputs:
+            jdkversion: 'JAVA_HOME_21_X64'
+
+        - task: SonarQubePublish@7
+          inputs:
+            pollingTimeoutSec: '300'
+
+# Stage 2: Lint Dockerfile (Hadolint)
+- stage: LintDockerfile
+  displayName: 'Lint Dockerfile with Hadolint'
+  jobs:
+    - job: InstallAndRunHadolint
+      displayName: 'Install and Run Hadolint'
+      steps:
+        - task: Bash@3
+          displayName: 'Install Hadolint'
+          inputs:
+            targetType: 'inline'
+            script: |
+              wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+              chmod +x hadolint-Linux-x86_64
+              mv hadolint-Linux-x86_64 hadolint
+
+        - task: Bash@3
+          displayName: 'Run Hadolint on Dockerfile'
+          inputs:
+            targetType: 'inline'
+            script: |
+              ./hadolint src/Dockerfile || true
+
+# Stage 3: Build Docker Image
+- stage: BuildDockerImage
+  displayName: 'Build Docker Image'
+  jobs:
+    - job: BuildDocker
+      displayName: 'Build Docker Image and push'
+      steps:
+        - task: Docker@2
+          displayName: 'Build Docker Image'
+          inputs:
+            containerRegistry: $(containerRegistry) 
+            repository: $(repository)
+            tags: |
+              latest
+              $(Build.SourceVersion)  
